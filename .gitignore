@@ -1,5 +1,3 @@
 config.ini
 *.session
 *.session-journal
-*.ipynb
-*.ipynb_checkpoints
