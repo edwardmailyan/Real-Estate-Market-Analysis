@@ -2,6 +2,7 @@ from telethon.sync import TelegramClient
 
 import configparser
 import csv
+from datetime import datetime
 
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import InputPeerEmpty, InputMessagesFilterUrl
@@ -11,8 +12,6 @@ config.read("config.ini")
 
 api_id = config['Telegram']['api_id']
 api_hash = config['Telegram']['api_hash']
-api_hash = str(api_hash)
-
 phone = config['Telegram']['phone']
 
 client = TelegramClient(phone, api_id, api_hash)
@@ -50,8 +49,12 @@ g_index = input("Введите нужную цифру: ")
 target_group = groups[int(g_index)]
 
 print('Собираем сообщения...')
+first_message = client.get_messages(target_group, limit=1, filter=InputMessagesFilterUrl,
+                                    offset_date=datetime(2022, 6, 1))
+min_id = first_message[0].id
+
 all_messages = []
-all_messages = client.get_messages(target_group, limit=50000, filter=InputMessagesFilterUrl)
+all_messages = client.get_messages(target_group, limit=70000, filter=InputMessagesFilterUrl, min_id=min_id)
 
 print('Сохраняем данные в файл...')
 with open("messages.csv", "w", encoding='UTF-8') as f:
